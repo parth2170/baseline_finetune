@@ -22,7 +22,7 @@ import librosa.feature
 import yaml
 
 ########################################################################
-
+from augmenter import *
 
 ########################################################################
 # setup STD I/O
@@ -136,7 +136,9 @@ def file_to_vector_array(file_name,
     dims = n_mels * frames
 
     # 02 generate melspectrogram using librosa
-    y, sr = file_load(file_name)
+    # y, sr = file_load(file_name)
+    y = load_randomly_augmented_audio(file_name)
+    sr = 16000
     mel_spectrogram = librosa.feature.melspectrogram(y=y,
                                                      sr=sr,
                                                      n_fft=n_fft,
