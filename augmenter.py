@@ -8,13 +8,13 @@ from tempfile import NamedTemporaryFile
 
 
 def load_audio(path):
-	sound, _ = torchaudio.load(path, normalization=True)
-	sound = sound.numpy().T
-	if len(sound.shape) > 1:
-		if sound.shape[1] == 1:
-			sound = sound.squeeze()
-		else:
-			sound = sound.mean(axis=1)  # multiple channels, average
+	sound, _ = librosa.load(path, sr=16000)
+	# sound = sound.numpy().T
+	# if len(sound.shape) > 1:
+	# 	if sound.shape[1] == 1:
+	# 		sound = sound.squeeze()
+	# 	else:
+	# 		sound = sound.mean(axis=1)  # multiple channels, average
 
 	return sound
 

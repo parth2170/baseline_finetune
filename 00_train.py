@@ -80,7 +80,7 @@ class visualizer(object):
 ########################################################################
 
 
-def list_to_vector_array(file_list,
+def list_to_vector_array(file_list, noise, 
                          msg="calc...",
                          n_mels=64,
                          frames=5,
@@ -106,7 +106,7 @@ def list_to_vector_array(file_list,
 
     # iterate file_to_vector_array()
     for idx in tqdm(range(len(file_list)), desc=msg):
-        vector_array = com.file_to_vector_array(file_list[idx],
+        vector_array = com.file_to_vector_array(file_list[idx], noise, 
                                                 n_mels=n_mels,
                                                 frames=frames,
                                                 n_fft=n_fft,
@@ -195,7 +195,7 @@ if __name__ == "__main__":
         # generate dataset
         print("============== DATASET_GENERATOR ==============")
         files = file_list_generator(target_dir, mid)
-        train_data = list_to_vector_array(files,
+        train_data = list_to_vector_array(files, False, 
                                           msg="generate train_dataset",
                                           n_mels=param["feature"]["n_mels"],
                                           frames=param["feature"]["frames"],
@@ -204,11 +204,13 @@ if __name__ == "__main__":
                                           power=param["feature"]["power"])
 
         # train model
-        noisy_data = []
-        for i in train_data:
-            i = numpy.array(i)
-            noisy_data.append(i + numpy.random.normal(0,1, size = i.shape))
-        noisy_data = numpy.array(noisy_data)
+        noisy_data = list_to_vector_array(files, True, 
+                                          msg="generate train_dataset",
+                                          n_mels=param["feature"]["n_mels"],
+                                          frames=param["feature"]["frames"],
+                                          n_fft=param["feature"]["n_fft"],
+                                          hop_length=param["feature"]["hop_length"],
+                                          power=param["feature"]["power"])
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 

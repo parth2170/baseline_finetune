@@ -20,7 +20,7 @@ import librosa
 import librosa.core
 import librosa.feature
 import yaml
-
+import random
 ########################################################################
 from augmenter import *
 
@@ -116,7 +116,7 @@ def file_load(wav_name, mono=False):
 ########################################################################
 # feature extractor
 ########################################################################
-def file_to_vector_array(file_name,
+def file_to_vector_array(file_name, noise, 
                          n_mels=64,
                          frames=5,
                          n_fft=1024,
@@ -136,9 +136,14 @@ def file_to_vector_array(file_name,
     dims = n_mels * frames
 
     # 02 generate melspectrogram using librosa
-    # y, sr = file_load(file_name)
-    y = load_randomly_augmented_audio(file_name)
-    sr = 16000
+    if noise == True:
+        if random.random() > 0.5:
+            y = load_randomly_augmented_audio(file_name)
+            sr = 16000
+        else:
+            y, sr = file_load(file_name) 
+    else:
+        y, sr = file_load(file_name)
     mel_spectrogram = librosa.feature.melspectrogram(y=y,
                                                      sr=sr,
                                                      n_fft=n_fft,
