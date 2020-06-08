@@ -23,6 +23,8 @@ from tqdm import tqdm
 # original lib
 import common as com
 import keras_model
+from tensorflow import keras
+
 ########################################################################
 
 
@@ -138,7 +140,7 @@ def file_list_generator(target_dir,
     # generate training list
     training_list_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext=ext))
     files = sorted(glob.glob(training_list_path))
-    files = [f for f in files if int(f.split('_')[2]) == mid]
+    files = [f for f in files if int(f.split('_')[4]) == mid]
     if len(files) == 0:
         com.logger.exception("no_wav_file!!")
 
@@ -175,7 +177,7 @@ if __name__ == "__main__":
         # set path
 
         ## Specify Machine ID here
-        mid = 1
+        mid = 3
 
 
         machine_type = os.path.split(target_dir)[1]
