@@ -161,6 +161,7 @@ def file_to_vector_array(file_name, noise,
     vector_array_size = len(log_mel_spectrogram[0, :]) - frames + 1
 
     # 05 skip too short clips
+    # Add mel dimensions
     n_mels += 30 * 8
     dims = n_mels * frames
     if vector_array_size < 1:
