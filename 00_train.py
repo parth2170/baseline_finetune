@@ -116,9 +116,9 @@ def list_to_vector_array(file_list, noise,
         # if idx == 0:
         #     dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
         # dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
-        if vector.shape[0] > 0:
+        if vector_array.shape[0] > 0:
             dataset.extend(vector_array)
-        dataset = np.array(dataset)
+    dataset = numpy.array(dataset)
 
     return dataset
 
@@ -216,13 +216,15 @@ if __name__ == "__main__":
                                           hop_length=param["feature"]["hop_length"],
                                           power=param["feature"]["power"])
         noisy_data = random.sample(list(noisy_data), len(train_data))
+        noisy_data = numpy.array(noisy_data)
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
         # model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
         model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
         model.summary()
-
+        print(noisy_data.shape)
+        print(train_data.shape)
         # model.compile(**param["fit"]["compile"])
         history = model.fit(noisy_data,
                             train_data,
