@@ -108,19 +108,15 @@ def list_to_vector_array(file_list, noise,
     # iterate file_to_vector_array()
     dataset = []
     for idx in tqdm(range(len(file_list)), desc=msg):
-        vector_array = com.file_to_vector_array(file_list[idx], noise, 
+        vector_array, srmr_val = com.file_to_vector_array(file_list[idx], noise, 
                                                 n_mels=n_mels,
                                                 frames=frames,
                                                 n_fft=n_fft,
                                                 hop_length=hop_length,
                                                 power=power)
-        # if idx == 0:
-        #     dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
-        # dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
-        if vector_array.shape[0] > 0:
-            dataset.extend(vector_array)
-    dataset = numpy.array(dataset)
-
+        if idx == 0:
+            dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
+        dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
     return dataset
 
 
@@ -186,12 +182,10 @@ if __name__ == "__main__":
 
 
         machine_type = os.path.split(target_dir)[1]
-        model_file_path = "{model}/model_{machine_type}_{machine_id}.hdf5".format(model=param["model_directory"],
-                                                                     machine_type=machine_type,
-                                                                     machine_id=mid)
-        history_img = "{model}/history_{machine_type}_{machine_id}.png".format(model=param["model_directory"],
-                                                                  machine_type=machine_type,
-                                                                  machine_id=mid)
+        model_file_path = "{model}/model_{machine_type}_all.hdf5".format(model=param["model_directory"],
+                                                                     machine_type=machine_type)
+        history_img = "{model}/history_{machine_type}_all.png".format(model=param["model_directory"],
+                                                                  machine_type=machine_type)
 
         if os.path.exists(model_file_path):
             com.logger.info("model exists")
@@ -208,23 +202,12 @@ if __name__ == "__main__":
                                           hop_length=param["feature"]["hop_length"],
                                           power=param["feature"]["power"])
 
-        # train model
-        # noisy_data = list_to_vector_array(files, True, 
-        #                                   msg="generate train_dataset",
-        #                                   n_mels=param["feature"]["n_mels"],
-        #                                   frames=param["feature"]["frames"],
-        #                                   n_fft=param["feature"]["n_fft"],
-        #                                   hop_length=param["feature"]["hop_length"],
-        #                                   power=param["feature"]["power"])
-        # noisy_data = random.sample(list(noisy_data), len(train_data))
-        # noisy_data = numpy.array(noisy_data)
-        # noisy_data = train_data
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
         # model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
         # model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
-        model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
+        model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"] + 480)
         model.summary()
 
         model.compile(**param["fit"]["compile"])

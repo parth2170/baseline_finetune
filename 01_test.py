@@ -206,9 +206,10 @@ if __name__ == "__main__":
 
             print("\n============== BEGIN TEST FOR A MACHINE ID ==============")
             y_pred = [0. for k in test_files]
+            srmr_score = [0. for k in test_files]
             for file_idx, file_path in tqdm(enumerate(test_files), total=len(test_files)):
                 try:
-                    data = com.file_to_vector_array(file_path,
+                    data, srmr_val = com.file_to_vector_array(file_path, False, 
                                                     n_mels=param["feature"]["n_mels"],
                                                     frames=param["feature"]["frames"],
                                                     n_fft=param["feature"]["n_fft"],
@@ -217,6 +218,7 @@ if __name__ == "__main__":
                     errors = numpy.mean(numpy.square(data - model.predict(data)), axis=1)
                     y_pred[file_idx] = numpy.mean(errors)
                     anomaly_score_list.append([os.path.basename(file_path), y_pred[file_idx]])
+                    srmr_score[file_idx] = srmr_val
                 except:
                     com.logger.error("file broken!!: {}".format(file_path))
 
@@ -232,6 +234,10 @@ if __name__ == "__main__":
                 performance.append([auc, p_auc])
                 com.logger.info("AUC : {}".format(auc))
                 com.logger.info("pAUC : {}".format(p_auc))
+                sauc = metrics.roc_auc_score(y_true, srmr_score)
+                sp_auc = metrics.roc_auc_score(y_true, srmr_score, max_fpr=param["max_fpr"])
+                com.logger.info("AUC : {}".format(sauc))
+                com.logger.info("pAUC : {}".format(sp_auc))
 
             print("\n============ END OF TEST FOR A MACHINE ID ============")
 

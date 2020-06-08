@@ -10,7 +10,7 @@ feature:
   n_mels: 128
   frames : 5
   n_fft: 1024
-  hop_length: 512
+  hop_length: 1024
   power: 2.0
 
 

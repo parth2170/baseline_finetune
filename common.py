@@ -21,6 +21,7 @@ import librosa.core
 import librosa.feature
 import yaml
 import random
+from srmrpy import srmr
 ########################################################################
 from augmenter import *
 
@@ -153,7 +154,10 @@ def file_to_vector_array(file_name, noise,
 
     # 03 convert melspectrogram to log mel energy
     log_mel_spectrogram = 20.0 / power * numpy.log10(mel_spectrogram + sys.float_info.epsilon)
-
+    srmr_val, modspec = srmr(y, fs, n_cochlear_filters = 30)
+    modspec = np.reshape(modspec, (modspec.shape[0] * modspec.shape[1], modspec.shape[2]))
+    log_mel_spectrogram = log_mel_spectrogram[:, :modspec.shape[1]]
+    log_mel_spectrogram = np.concatenate((log_mel_spectrogram, modspec), axis = 0)
     # 04 calculate total vector size
     vector_array_size = len(log_mel_spectrogram[0, :]) - frames + 1
 
@@ -166,7 +170,7 @@ def file_to_vector_array(file_name, noise,
     for t in range(frames):
         vector_array[:, n_mels * t: n_mels * (t + 1)] = log_mel_spectrogram[:, t: t + vector_array_size].T
 
-    return vector_array
+    return vector_array, srmr_val
 
 
 # load dataset
