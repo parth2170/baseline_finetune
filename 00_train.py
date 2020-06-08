@@ -11,6 +11,7 @@
 import os
 import glob
 import sys
+import random
 ########################################################################
 
 
@@ -208,27 +209,29 @@ if __name__ == "__main__":
                                           power=param["feature"]["power"])
 
         # train model
-        noisy_data = list_to_vector_array(files, True, 
-                                          msg="generate train_dataset",
-                                          n_mels=param["feature"]["n_mels"],
-                                          frames=param["feature"]["frames"],
-                                          n_fft=param["feature"]["n_fft"],
-                                          hop_length=param["feature"]["hop_length"],
-                                          power=param["feature"]["power"])
-        noisy_data = random.sample(list(noisy_data), len(train_data))
-        noisy_data = numpy.array(noisy_data)
+        # noisy_data = list_to_vector_array(files, True, 
+        #                                   msg="generate train_dataset",
+        #                                   n_mels=param["feature"]["n_mels"],
+        #                                   frames=param["feature"]["frames"],
+        #                                   n_fft=param["feature"]["n_fft"],
+        #                                   hop_length=param["feature"]["hop_length"],
+        #                                   power=param["feature"]["power"])
+        # noisy_data = random.sample(list(noisy_data), len(train_data))
+        # noisy_data = numpy.array(noisy_data)
+        noisy_data = train_data
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
         # model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
-        model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
+        # model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
+        model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
         model.summary()
-        print(noisy_data.shape)
-        print(train_data.shape)
+
+        model.compile(**param["fit"]["compile"])
         # model.compile(**param["fit"]["compile"])
         history = model.fit(noisy_data,
                             train_data,
-                            epochs=25,
+                            epochs=50,
                             batch_size=param["fit"]["batch_size"],
                             shuffle=param["fit"]["shuffle"],
                             validation_split=param["fit"]["validation_split"],
