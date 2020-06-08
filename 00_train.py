@@ -177,7 +177,7 @@ if __name__ == "__main__":
         # set path
 
         ## Specify Machine ID here
-        mid = 3
+        mid = 1
 
 
         machine_type = os.path.split(target_dir)[1]
@@ -206,9 +206,9 @@ if __name__ == "__main__":
         # train model
         noisy_data = []
         for i in train_data:
-            i = np.array(i)
+            i = numpy.array(i)
             noisy_data.append(i + numpy.random.normal(0,1, size = i.shape))
-        noisy_data = np.array(noisy_data)
+        noisy_data = numpy.array(noisy_data)
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
@@ -219,7 +219,7 @@ if __name__ == "__main__":
         # model.compile(**param["fit"]["compile"])
         history = model.fit(noisy_data,
                             train_data,
-                            epochs=50,
+                            epochs=25,
                             batch_size=param["fit"]["batch_size"],
                             shuffle=param["fit"]["shuffle"],
                             validation_split=param["fit"]["validation_split"],
