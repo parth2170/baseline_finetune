@@ -105,6 +105,7 @@ def list_to_vector_array(file_list, noise,
     dims = n_mels * frames
 
     # iterate file_to_vector_array()
+    dataset = []
     for idx in tqdm(range(len(file_list)), desc=msg):
         vector_array = com.file_to_vector_array(file_list[idx], noise, 
                                                 n_mels=n_mels,
@@ -112,9 +113,12 @@ def list_to_vector_array(file_list, noise,
                                                 n_fft=n_fft,
                                                 hop_length=hop_length,
                                                 power=power)
-        if idx == 0:
-            dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
-        dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
+        # if idx == 0:
+        #     dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
+        # dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
+        if vector.shape[0] > 0:
+            dataset.extend(vector_array)
+        dataset = np.array(dataset)
 
     return dataset
 
