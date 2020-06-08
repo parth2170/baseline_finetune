@@ -137,7 +137,7 @@ def file_to_vector_array(file_name, noise,
 
     # 02 generate melspectrogram using librosa
     if noise == True:
-        if random.random() > 0.5:
+        if random.random() > 0.4:
             y = load_randomly_augmented_audio(file_name)
             sr = 16000
         else:

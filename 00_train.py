@@ -211,6 +211,7 @@ if __name__ == "__main__":
                                           n_fft=param["feature"]["n_fft"],
                                           hop_length=param["feature"]["hop_length"],
                                           power=param["feature"]["power"])
+        noisy_data = random.sample(list(noisy_data), len(train_data))
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
