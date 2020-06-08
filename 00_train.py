@@ -194,7 +194,7 @@ if __name__ == "__main__":
         # generate dataset
         print("============== DATASET_GENERATOR ==============")
         files = file_list_generator(target_dir, mid)
-        train_data = list_to_vector_array(files, False, 
+        train_data = list_to_vector_array(files[:10], False, 
                                           msg="generate train_dataset",
                                           n_mels=param["feature"]["n_mels"],
                                           frames=param["feature"]["frames"],
@@ -207,7 +207,7 @@ if __name__ == "__main__":
         ## Load pre-trained model 
         # model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
         # model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
-        model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"] + 480)
+        model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"] + 60 * 8)
         model.summary()
 
         model.compile(**param["fit"]["compile"])

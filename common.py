@@ -154,7 +154,7 @@ def file_to_vector_array(file_name, noise,
 
     # 03 convert melspectrogram to log mel energy
     log_mel_spectrogram = 20.0 / power * numpy.log10(mel_spectrogram + sys.float_info.epsilon)
-    srmr_val, modspec = srmr(y, fs, n_cochlear_filters = 30)
+    srmr_val, modspec = srmr(y, sr, n_cochlear_filters = 30)
     modspec = np.reshape(modspec, (modspec.shape[0] * modspec.shape[1], modspec.shape[2]))
     log_mel_spectrogram = log_mel_spectrogram[:, :modspec.shape[1]]
     log_mel_spectrogram = np.concatenate((log_mel_spectrogram, modspec), axis = 0)
@@ -166,6 +166,7 @@ def file_to_vector_array(file_name, noise,
         return numpy.empty((0, dims))
 
     # 06 generate feature vectors by concatenating multiframes
+    n_mels += 60 * 8
     vector_array = numpy.zeros((vector_array_size, dims))
     for t in range(frames):
         vector_array[:, n_mels * t: n_mels * (t + 1)] = log_mel_spectrogram[:, t: t + vector_array_size].T
