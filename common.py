@@ -134,7 +134,6 @@ def file_to_vector_array(file_name, noise,
         * dataset.shape = (dataset_size, feature_vector_length)
     """
     # 01 calculate the number of dimensions
-    dims = n_mels * frames
 
     # 02 generate melspectrogram using librosa
     if noise == True:
@@ -162,11 +161,12 @@ def file_to_vector_array(file_name, noise,
     vector_array_size = len(log_mel_spectrogram[0, :]) - frames + 1
 
     # 05 skip too short clips
+    n_mels += 30 * 8
+    dims = n_mels * frames
     if vector_array_size < 1:
         return numpy.empty((0, dims))
 
     # 06 generate feature vectors by concatenating multiframes
-    n_mels += 60 * 8
     vector_array = numpy.zeros((vector_array_size, dims))
     for t in range(frames):
         vector_array[:, n_mels * t: n_mels * (t + 1)] = log_mel_spectrogram[:, t: t + vector_array_size].T
