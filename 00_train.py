@@ -204,6 +204,11 @@ if __name__ == "__main__":
                                           power=param["feature"]["power"])
 
         # train model
+        noisy_data = []
+        for i in train_data:
+            i = np.array(i)
+            noisy_data.append(i + numpy.random.normal(0,1, size = i.shape))
+        noisy_data = np.array(noisy_data)
         print("============== MODEL TRAINING ==============")
 
         ## Load pre-trained model 
@@ -212,7 +217,7 @@ if __name__ == "__main__":
         model.summary()
 
         # model.compile(**param["fit"]["compile"])
-        history = model.fit(train_data,
+        history = model.fit(noisy_data,
                             train_data,
                             epochs=50,
                             batch_size=param["fit"]["batch_size"],
