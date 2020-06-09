@@ -103,8 +103,7 @@ def list_to_vector_array(file_list, noise,
         * dataset.shape = (number of feature vectors, dimensions of feature vectors)
     """
     # calculate the number of dimensions
-    n_mels += 30 * 8
-    dims = n_mels * frames
+    dims = (n_mels + 30*8) * frames
 
     # iterate file_to_vector_array()
     dataset = []
@@ -119,7 +118,7 @@ def list_to_vector_array(file_list, noise,
         #     dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
         # dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
         dataset.extend(vector_array)
-        dataset = numpy.array(dataset)
+    dataset = numpy.array(dataset)
     return dataset
 
 
@@ -197,7 +196,7 @@ if __name__ == "__main__":
         # generate dataset
         print("============== DATASET_GENERATOR ==============")
         files = file_list_generator(target_dir, mid)
-        train_data = list_to_vector_array(files[:10], False, 
+        train_data = list_to_vector_array(files, False, 
                                           msg="generate train_dataset",
                                           n_mels=param["feature"]["n_mels"],
                                           frames=param["feature"]["frames"],
@@ -210,8 +209,8 @@ if __name__ == "__main__":
         ## Load pre-trained model 
         # model = keras_model.get_model(param["feature"]["n_mels"] * param["feature"]["frames"])
         # model = keras.models.load_model("../dcase2020_task2_baseline/{model}/model_{machine_type}.hdf5".format(model=param["model_directory"], machine_type=machine_type))
-        model = keras_model.get_model((param["feature"]["n_mels"] + 30 * 8) * (param["feature"]["frames"] + 30 * 8))
-        model.summary()
+        model = keras_model.get_model((param["feature"]["n_mels"] + 30 * 8) * param["feature"]["frames"])
+        #  model.summary()
 
         model.compile(**param["fit"]["compile"])
         # model.compile(**param["fit"]["compile"])

@@ -166,12 +166,10 @@ def file_to_vector_array(file_name, noise,
     dims = n_mels * frames
     if vector_array_size < 1:
         return numpy.empty((0, dims))
-
     # 06 generate feature vectors by concatenating multiframes
     vector_array = numpy.zeros((vector_array_size, dims))
     for t in range(frames):
         vector_array[:, n_mels * t: n_mels * (t + 1)] = log_mel_spectrogram[:, t: t + vector_array_size].T
-
     return vector_array, srmr_val
 
 
