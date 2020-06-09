@@ -173,20 +173,19 @@ if __name__ == "__main__":
         machine_type = os.path.split(target_dir)[1]
 
         print("============== MODEL LOAD ==============")
-
+        # set model path
+        model_file = "{model}/model_{machine_type}_all.hdf5".format(model=param["model_directory"],
+                                                                         machine_type=machine_type)
+        # load model file
+        if not os.path.exists(model_file):
+            com.logger.error("{} model not found ".format(model_file))
+            sys.exit(-1)
+        model = keras.models.load_model(model_file)
+        model.summary()
+            
         machine_id_list = get_machine_id_list_for_test(target_dir)
 
         for id_str in machine_id_list:
-            # set model path
-            model_file = "{model}/model_{machine_type}_{machine_id}.hdf5".format(model=param["model_directory"],
-                                                                         machine_type=machine_type,
-                                                                         machine_id=int(id_str.split('_')[-1]))
-            # load model file
-            if not os.path.exists(model_file):
-                com.logger.error("{} model not found ".format(model_file))
-                sys.exit(-1)
-            model = keras.models.load_model(model_file)
-            model.summary()
 
             if mode:
                 # results by type

@@ -123,7 +123,6 @@ def list_to_vector_array(file_list, noise,
 
 
 def file_list_generator(target_dir,
-                        mid,
                         dir_name="train",
                         ext="wav"):
     """
@@ -143,7 +142,6 @@ def file_list_generator(target_dir,
     # generate training list
     training_list_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext=ext))
     files = sorted(glob.glob(training_list_path))
-    files = [f for f in files if int(f.split('_')[4]) == mid]
     if len(files) == 0:
         com.logger.exception("no_wav_file!!")
 
@@ -180,9 +178,6 @@ if __name__ == "__main__":
         # set path
 
         ## Specify Machine ID here
-        mid = 1
-
-
         machine_type = os.path.split(target_dir)[1]
         model_file_path = "{model}/model_{machine_type}_all.hdf5".format(model=param["model_directory"],
                                                                      machine_type=machine_type)
@@ -195,7 +190,7 @@ if __name__ == "__main__":
 
         # generate dataset
         print("============== DATASET_GENERATOR ==============")
-        files = file_list_generator(target_dir, mid)
+        files = file_list_generator(target_dir)
         train_data = list_to_vector_array(files, False, 
                                           msg="generate train_dataset",
                                           n_mels=param["feature"]["n_mels"],
@@ -216,7 +211,7 @@ if __name__ == "__main__":
         # model.compile(**param["fit"]["compile"])
         history = model.fit(train_data,
                             train_data,
-                            epochs=50,
+                            epochs=100,
                             batch_size=param["fit"]["batch_size"],
                             shuffle=param["fit"]["shuffle"],
                             validation_split=param["fit"]["validation_split"],
