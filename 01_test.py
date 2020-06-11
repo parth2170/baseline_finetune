@@ -205,19 +205,20 @@ if __name__ == "__main__":
 
             print("\n============== BEGIN TEST FOR A MACHINE ID ==============")
             y_pred = [0. for k in test_files]
-            srmr_score = [0. for k in test_files]
             for file_idx, file_path in tqdm(enumerate(test_files), total=len(test_files)):
                 try:
-                    data, srmr_val = com.file_to_vector_array(file_path, False, 
+                    data = com.file_to_vector_array(file_path, False, 
                                                     n_mels=param["feature"]["n_mels"],
                                                     frames=param["feature"]["frames"],
                                                     n_fft=param["feature"]["n_fft"],
                                                     hop_length=param["feature"]["hop_length"],
                                                     power=param["feature"]["power"])
+                    print(data)
                     errors = numpy.mean(numpy.square(data - model.predict(data)), axis=1)
+                    print("*********ERRRRRR")
+                    print(errors)
                     y_pred[file_idx] = numpy.mean(errors)
                     anomaly_score_list.append([os.path.basename(file_path), y_pred[file_idx]])
-                    srmr_score[file_idx] = srmr_val
                 except:
                     com.logger.error("file broken!!: {}".format(file_path))
 
