@@ -20,23 +20,23 @@ def get_model(inputDim):
     """
     define the keras model
     the model based on the simple dense auto encoder 
-    (128*128*128*128*8*128*128*128*128)
+    (64*64*64*64*8*64*64*64*64)
     """
     inputLayer = Input(shape=(inputDim,))
 
-    h = Dense(128)(inputLayer)
+    h = Dense(64)(inputLayer)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
     
@@ -44,19 +44,19 @@ def get_model(inputDim):
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 
-    h = Dense(128)(h)
+    h = Dense(64)(h)
     h = BatchNormalization()(h)
     h = Activation('relu')(h)
 

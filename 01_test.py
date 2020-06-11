@@ -65,7 +65,7 @@ def get_machine_id_list_for_test(target_dir,
             list of machine IDs extracted from the names of test files
     """
     # create test files
-    dir_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext=ext))
+    dir_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext="csv"))
     file_paths = sorted(glob.glob(dir_path))
     # extract id
     machine_id_list = sorted(list(set(itertools.chain.from_iterable(
@@ -113,14 +113,14 @@ def test_file_list_generator(target_dir,
                                                                                  dir_name=dir_name,
                                                                                  prefix_normal=prefix_normal,
                                                                                  id_name=id_name,
-                                                                                 ext=ext)))
+                                                                                 ext="csv")))
         normal_labels = numpy.zeros(len(normal_files))
         anomaly_files = sorted(
             glob.glob("{dir}/{dir_name}/{prefix_anomaly}_{id_name}*.{ext}".format(dir=target_dir,
                                                                                   dir_name=dir_name,
                                                                                   prefix_anomaly=prefix_anomaly,
                                                                                   id_name=id_name,
-                                                                                  ext=ext)))
+                                                                                  ext="csv")))
         anomaly_labels = numpy.ones(len(anomaly_files))
         files = numpy.concatenate((normal_files, anomaly_files), axis=0)
         labels = numpy.concatenate((normal_labels, anomaly_labels), axis=0)
@@ -135,7 +135,7 @@ def test_file_list_generator(target_dir,
             glob.glob("{dir}/{dir_name}/*{id_name}*.{ext}".format(dir=target_dir,
                                                                   dir_name=dir_name,
                                                                   id_name=id_name,
-                                                                  ext=ext)))
+                                                                  ext="csv")))
         labels = None
         com.logger.info("test_file  num : {num}".format(num=len(files)))
         if len(files) == 0:

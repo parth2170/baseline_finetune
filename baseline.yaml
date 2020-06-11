@@ -1,4 +1,4 @@
-dev_directory : ./dev_data
+dev_directory : ./ivectors/ivector_mfcc_100
 eval_directory : ./eval_data
 model_directory: ./model
 result_directory: ./result

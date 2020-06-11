@@ -21,6 +21,7 @@ import librosa.core
 import librosa.feature
 import yaml
 import random
+import pandas as pd
 from srmrpy import srmr
 ########################################################################
 from augmenter import *
@@ -106,7 +107,8 @@ def file_load(wav_name, mono=False):
     return : numpy.array( float )
     """
     try:
-        return librosa.load(wav_name, sr=None, mono=mono)
+        iv = pd.read_csv(wav_name, names = ['iv'])
+        return list(iv['iv'])
     except:
         logger.error("file_broken or not exists!! : {}".format(wav_name))
 
@@ -134,43 +136,8 @@ def file_to_vector_array(file_name, noise,
         * dataset.shape = (dataset_size, feature_vector_length)
     """
     # 01 calculate the number of dimensions
-
-    # 02 generate melspectrogram using librosa
-    if noise == True:
-        if random.random() > 0.4:
-            y = load_randomly_augmented_audio(file_name)
-            sr = 16000
-        else:
-            y, sr = file_load(file_name) 
-    else:
-        y, sr = file_load(file_name)
-    mel_spectrogram = librosa.feature.melspectrogram(y=y,
-                                                     sr=sr,
-                                                     n_fft=n_fft,
-                                                     hop_length=hop_length,
-                                                     n_mels=n_mels,
-                                                     power=power)
-
-    # 03 convert melspectrogram to log mel energy
-    log_mel_spectrogram = 20.0 / power * numpy.log10(mel_spectrogram + sys.float_info.epsilon)
-    srmr_val, modspec = srmr(y, sr, n_cochlear_filters = 30)
-    modspec = np.reshape(modspec, (modspec.shape[0] * modspec.shape[1], modspec.shape[2]))
-    log_mel_spectrogram = log_mel_spectrogram[:, :modspec.shape[1]]
-    log_mel_spectrogram = np.concatenate((log_mel_spectrogram, modspec), axis = 0)
-    # 04 calculate total vector size
-    vector_array_size = len(log_mel_spectrogram[0, :]) - frames + 1
-
-    # 05 skip too short clips
-    # Add mel dimensions
-    n_mels += 30 * 8
-    dims = n_mels * frames
-    if vector_array_size < 1:
-        return numpy.empty((0, dims))
-    # 06 generate feature vectors by concatenating multiframes
-    vector_array = numpy.zeros((vector_array_size, dims))
-    for t in range(frames):
-        vector_array[:, n_mels * t: n_mels * (t + 1)] = log_mel_spectrogram[:, t: t + vector_array_size].T
-    return vector_array, srmr_val
+    y = file_load(file_name)
+    return y
 
 
 # load dataset

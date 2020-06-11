@@ -103,12 +103,11 @@ def list_to_vector_array(file_list, noise,
         * dataset.shape = (number of feature vectors, dimensions of feature vectors)
     """
     # calculate the number of dimensions
-    dims = (n_mels + 30*8) * frames
 
     # iterate file_to_vector_array()
     dataset = []
     for idx in tqdm(range(len(file_list)), desc=msg):
-        vector_array, srmr_val = com.file_to_vector_array(file_list[idx], noise, 
+        vector_array = com.file_to_vector_array(file_list[idx], noise, 
                                                 n_mels=n_mels,
                                                 frames=frames,
                                                 n_fft=n_fft,
@@ -117,7 +116,7 @@ def list_to_vector_array(file_list, noise,
         # if idx == 0:
         #     dataset = numpy.zeros((vector_array.shape[0] * len(file_list), dims), float)
         # dataset[vector_array.shape[0] * idx: vector_array.shape[0] * (idx + 1), :] = vector_array
-        dataset.extend(vector_array)
+        dataset.append(vector_array)
     dataset = numpy.array(dataset)
     return dataset
 
@@ -140,7 +139,7 @@ def file_list_generator(target_dir,
     com.logger.info("target_dir : {}".format(target_dir))
 
     # generate training list
-    training_list_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext=ext))
+    training_list_path = os.path.abspath("{dir}/{dir_name}/*.{ext}".format(dir=target_dir, dir_name=dir_name, ext="csv"))
     files = sorted(glob.glob(training_list_path))
     if len(files) == 0:
         com.logger.exception("no_wav_file!!")
