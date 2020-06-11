@@ -213,9 +213,8 @@ if __name__ == "__main__":
                                                     n_fft=param["feature"]["n_fft"],
                                                     hop_length=param["feature"]["hop_length"],
                                                     power=param["feature"]["power"])
-                    print(data)
-                    errors = numpy.mean(numpy.square(data - model.predict(data)), axis=1)
-                    print("*********ERRRRRR")
+                    data = np.array(data)
+                    errors = numpy.square(data - model.predict(data))
                     print(errors)
                     y_pred[file_idx] = numpy.mean(errors)
                     anomaly_score_list.append([os.path.basename(file_path), y_pred[file_idx]])
@@ -234,10 +233,6 @@ if __name__ == "__main__":
                 performance.append([auc, p_auc])
                 com.logger.info("AUC : {}".format(auc))
                 com.logger.info("pAUC : {}".format(p_auc))
-                sauc = metrics.roc_auc_score(y_true, srmr_score)
-                sp_auc = metrics.roc_auc_score(y_true, srmr_score, max_fpr=param["max_fpr"])
-                com.logger.info("AUC : {}".format(sauc))
-                com.logger.info("pAUC : {}".format(sp_auc))
 
             print("\n============ END OF TEST FOR A MACHINE ID ============")
 
